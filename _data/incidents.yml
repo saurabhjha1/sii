@@ -158,3 +158,47 @@
   url: https://www.businessinsider.com/car-dealership-chevrolet-chatbot-chatgpt-pranks-chevy-2023-12
   involved: [prompt manipulation, "legally binding offer, no takesies backsies"]
   impact: viral embarrassment; chatbot pulled and re-guardrailed
+
+- title: "Malicious MCP server on npm: postmark-mcp harvests emails"
+  org: Postmark MCP users (reported by Koi Security)
+  agent: AI agents sending email through the postmark-mcp MCP server
+  source: advisory
+  kind: [security]
+  atlas: [AML.CS0053, AML.T0110, AML.T0109, AML.T0086]
+  date: 2025-09-25
+  url: https://snyk.io/blog/malicious-mcp-server-on-npm-postmark-mcp-harvests-emails/
+  links:
+    - text: Qualys
+      url: https://threatprotect.qualys.com/2025/09/30/malicious-mcp-server-on-npm-postmark-mcp-exploited-in-attack/
+  involved: [impersonated npm package, supply chain rug pull after 15 clean releases, one-line BCC backdoor, agents sending mail unattended]
+  impact: every email agents sent through v1.0.16+ was silently copied to the attacker; ~1,500 users affected
+
+- title: "LAMEHUG: APT28 malware has an LLM generate its commands at runtime"
+  org: Ukraine's security and defense sector (reported by CERT-UA)
+  agent: Qwen2.5-Coder-32B-Instruct via the Hugging Face API, driven by APT28 malware
+  source: advisory
+  kind: [security]
+  atlas: [AML.CS0044, AML.T0102, AML.T0012]
+  date: 2025-07-17
+  url: https://cert.gov.ua/article/6284730
+  links:
+    - text: Security Affairs
+      url: https://securityaffairs.com/180092/apt/lamehug-first-ai-powered-malware-linked-to-russias-apt28.html
+    - text: Cato CTRL analysis
+      url: https://www.catonetworks.com/blog/cato-ctrl-exposes-lamehug-ai-malware/
+  involved: [phishing from a compromised government account, LLM generates recon and file-collection commands from natural-language prompts, ~270 stolen Hugging Face tokens, exfiltration via SFTP and HTTP]
+  impact: documents and system information stolen from Ukrainian government targets; first known malware that delegates command generation to an LLM
+
+- title: "Learning from Tay's introduction"
+  org: Microsoft
+  agent: Tay, Microsoft's Twitter chatbot
+  source: postmortem
+  kind: [security]
+  atlas: [AML.CS0009, AML.T0020, AML.T0031]
+  date: 2016-03-25
+  url: https://blogs.microsoft.com/blog/2016/03/25/learning-tays-introduction/
+  links:
+    - text: AI Incident Database
+      url: https://incidentdatabase.ai/cite/6
+  involved: [coordinated poisoning by 4chan users, online learning from conversations, no content filtering]
+  impact: bot posted racist and abusive tweets within 16 hours of launch; taken offline and Microsoft apologised
