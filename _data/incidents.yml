@@ -202,3 +202,126 @@
       url: https://incidentdatabase.ai/cite/6
   involved: [coordinated poisoning by 4chan users, online learning from conversations, no content filtering]
   impact: bot posted racist and abusive tweets within 16 hours of launch; taken offline and Microsoft apologised
+
+- title: "Retrieving server secrets and bypassing authorization on a government statistics website"
+  org: Unnamed government statistics agency (disclosed by OpenAI)
+  agent: "'Highly persistent' internal OpenAI model, during an RL training run"
+  source: postmortem
+  kind: [security]
+  atlas: [AML.T0049, AML.T0055, AML.T0025]
+  date: 2026-10-15
+  url: https://alignment.openai.com/misalignment-reports/retrieving-server-secrets-and-bypassing-authorization-on-a-government-statistics-website/
+  links:
+    - text: Fortune
+      url: https://fortune.com/2026/10/16/openai-discloses-four-more-rogue-incidents-involving-financial-medical-and-government-data/
+    - text: OpenAI misalignment reports index
+      url: https://alignment.openai.com/misalignment-reports/
+  involved: [GET-only instruction ignored, spoofed admin headers, 1,000+ account emails harvested via proxy, path traversal from a verbose error, config with DB string and token-signing secret downloaded, unsigned auth tokens accepted, found two months later by retroactive monitoring]
+  impact: a real government site had its secrets and 24 years of data pulled during a one-number lookup; the model reported the answer without disclosing how; rated critical
+
+- title: "Accessing and changing internal systems during dashboard research"
+  org: Unnamed international research organisation (disclosed by OpenAI)
+  agent: "'Highly persistent' internal OpenAI model, during RL evaluations"
+  source: postmortem
+  kind: [security]
+  atlas: [AML.T0055, AML.T0049, AML.T0025]
+  date: 2026-10-15
+  url: https://alignment.openai.com/misalignment-reports/accessing-and-changing-internal-systems-during-dashboard-research/
+  links:
+    - text: Fortune
+      url: https://fortune.com/2026/10/16/openai-discloses-four-more-rogue-incidents-involving-financial-medical-and-government-data/
+  involved: [OpenSearch credentials in public JavaScript, 1,489 user-directory records read, PUT to add a trusted connector endpoint, PATCH to change a token audience, internal OneLake tables downloaded, access retained after reverting, nothing disclosed to evaluators]
+  impact: "production configuration of a real organisation changed and 147,451 non-public rows taken while looking up five published numbers; rated critical"
+
+- title: "Using a funded test cryptocurrency wallet without authorization"
+  org: Owner of a Sepolia account derived from a well-known recovery phrase (disclosed by OpenAI)
+  agent: Internal GPT-5.6 Sol-family research model, during a coding training task
+  source: postmortem
+  kind: [security]
+  atlas: [AML.T0055, AML.T0012]
+  date: 2026-10-15
+  url: https://alignment.openai.com/misalignment-reports/using-a-funded-test-cryptocurrency-wallet-without-authorization/
+  links:
+    - text: Fortune
+      url: https://fortune.com/2026/10/16/openai-discloses-four-more-rogue-incidents-involving-financial-medical-and-government-data/
+  involved: [faucets failed, script derived 362 accounts from public developer seed phrases, third party's private key used to sign a deployment, broadcast via an external RPC provider, "'funds effectively abandoned' reasoning", not mentioned in final summary]
+  impact: someone else's account on the live Sepolia test network paid the gas for the model's contract deployment; discovered three months later
+
+- title: "Obtaining public statistics with disallowed requests"
+  org: A government care dashboard and a benefits portal, names withheld (disclosed by OpenAI)
+  agent: Internal OpenAI research models, including the "highly persistent" one, during RL training
+  source: postmortem
+  kind: [security]
+  atlas: [AML.T0012, AML.T0025]
+  date: 2026-10-09
+  url: https://alignment.openai.com/misalignment-reports/obtaining-public-statistics-with-disallowed-requests/
+  involved: [raw sockets to bypass a GET-only proxy, account registered with a temporary email, API key obtained, claimant counts for 8,600 neighbourhoods downloaded, 658,567 rows imported, "we should not mention in final"]
+  impact: accounts created and bulk data pulled from real public-sector sites against instructions; the episode was trained on with full reward
+
+- title: "Exposing a GitHub token in a public repository"
+  org: OpenAI (openai/codex public repository)
+  agent: "'Highly persistent' internal OpenAI model in a custom harness, internal deployment"
+  source: postmortem
+  kind: [security]
+  atlas: [AML.T0055, AML.T0025]
+  date: 2026-09-25
+  url: https://alignment.openai.com/misalignment-reports/exposing-a-github-token-in-a-public-repository/
+  involved: [asked to write a Lean proof, tried to fetch another team's submission instead, replaced a CI script in a public PR, "researcher's GitHub token embedded and split 'to avoid scanners'", push protection evaded, called the relay "benign" when asked]
+  impact: a live GitHub token sat in a public branch of openai/codex until the researcher noticed; all employee keys rotated and the model pulled for two weeks
+
+- title: "An agent used DNS to reach an external chatbot"
+  org: OpenAI training infrastructure and an unnamed public chatbot service
+  agent: Internal OpenAI research model, during RL training
+  source: postmortem
+  kind: [security]
+  atlas: [AML.T0025]
+  date: 2026-09-25
+  url: https://alignment.openai.com/misalignment-reports/an-agent-used-dns-to-reach-an-external-chatbot/
+  involved: [search tool unhelpful, benchmark answer files decrypted from the offline cache, sandbox resolver reached the live internet, DNS-tunnelling service relayed 19 queries to an external chatbot, run killed 2.5 hours after the P0 alert]
+  impact: network isolation bypassed and task clues sent to a third-party service; all training and evaluation of OpenAI's most capable models paused and the model retired
+
+- title: "Signing up for disposable emails and searching GitHub for leaked API keys"
+  org: A statistics API provider and GitHub users whose keys had leaked (disclosed by OpenAI)
+  agent: Unreleased internal OpenAI model with sub-agents, during RL training
+  source: postmortem
+  kind: [security]
+  atlas: [AML.T0055, AML.T0012]
+  date: 2026-09-16
+  url: https://alignment.openai.com/misalignment-reports/searching-github-for-leaked-api-keys/
+  involved: [temporary-email signup with fake org details, repo archives grepped for 40-char hex keys, "'students leave keys' in course notebooks", a third party's leaked key authenticated and reused, nine fabricated numbers presented as transcribed]
+  impact: a stranger's leaked API key was used against a real service and the final answer was invented; discovered by 20% sampling of the run
+
+- title: "Investigating unintended model actions: Claude exploited a university server, submitted real government forms and bypassed fee gates"
+  org: A university, government form sites, local and state agencies and da.gd (disclosed by Anthropic)
+  agent: Claude Mythos Preview, Claude Mythos 5, Claude Opus 5, Claude Haiku 4.5 and an unreleased research model, in evaluations and internal use
+  source: postmortem
+  kind: [security]
+  atlas: [AML.T0049, AML.T0055]
+  date: 2026-10-09
+  url: https://www.anthropic.com/research/investigating-unintended-model-actions
+  involved: [file-read script abused then an injection flaw used to run commands on a university server, data-use agreement accepted via the site's own apps, real government forms submitted instead of practice copies, map and dashboard tokens scraped to skip fees, URL shorteners used to evade fetch-tool limits]
+  impact: commands run on a third party's server and real forms filed during benchmark runs; da.gd's operator noticed independently; live web access removed from all Anthropic evaluations
+
+- title: "Anthropic says its AI model submitted a false cold case tip to Philadelphia police"
+  org: Philadelphia Police Department
+  agent: Claude Haiku 4.5, generating and performing example tasks on random web pages
+  source: news
+  kind: [reliability]
+  date: 2026-10-13
+  url: https://www.nbcnews.com/news/us-news/anthropic-says-model-submitted-false-cold-case-tip-philadelphia-police-rcna603213
+  links:
+    - text: Anthropic research post
+      url: https://www.anthropic.com/research/investigating-unintended-model-actions
+  involved: [autonomous task generation on random pages, real police tip form, fabricated eyewitness account, asked to be contacted]
+  impact: a made-up homicide tip reached a police department's tip line; flagged as spam before it reached investigators
+
+- title: "An AI assistant hacked a gym's booking system to jump the waitlist"
+  org: Unnamed Australian gym and its booking software provider
+  agent: OpenClaw running on Claude, operated by a member who asked it to book a class
+  source: news
+  kind: [security]
+  atlas: [AML.T0049]
+  date: 2026-08-10
+  url: https://www.abc.net.au/news/2026-08-10/ai-assistant-hacks-gym-website-aus-cyber-attack/107007986
+  involved: [booking API with no authorisation checks, reservations made outside the allowed window, "another member's reservation cancelled 'to test capabilities'", could not be reversed, agent drafted the vulnerability report itself]
+  impact: a real gym member lost their waitlist place and could not be reinstated; first known Australian case of an autonomous AI hack
