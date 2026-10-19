@@ -43,6 +43,27 @@ CI runs `ruby scripts/validate.rb` on every push and pull request. It checks req
 ruby scripts/validate.rb
 ```
 
+## Hacker News scout
+
+A daily GitHub Action (`.github/workflows/hn-scout.yml`) runs `scripts/hn_scout.py`:
+
+1. Pulls the last 36 hours of Hacker News stories with 5+ points.
+2. Drops anything whose URL is already listed or whose HN id was already filed.
+3. Sends the titles to Claude, which flags stories that might be a qualifying incident.
+4. For each flagged story, Claude reads the article, the HN thread and the primary source, then drafts an entry.
+5. The draft is run through `scripts/validate.rb`. If it passes, the bot opens an issue (with its reasoning) and a PR that adds the entry and closes the issue. If it fails, only the issue is opened.
+
+A human still reads the source before merging. The bot's PRs are labeled `hn-scout`.
+
+Setup: add an `ANTHROPIC_API_KEY` repository secret. Optionally add `HN_SCOUT_TOKEN` (a fine-grained PAT with contents, issues and pull-requests write) so the bot's PRs trigger the validate workflow; PRs opened with the default `GITHUB_TOKEN` do not trigger other workflows.
+
+Run it yourself:
+
+```sh
+pip install -r scripts/requirements.txt
+ANTHROPIC_API_KEY=... python scripts/hn_scout.py --dry-run --hours 72
+```
+
 ## Running locally
 
 The site is plain [Jekyll](https://jekyllrb.com/) and builds on GitHub Pages with no custom plugins.
