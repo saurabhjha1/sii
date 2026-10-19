@@ -1,0 +1,100 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ site.title }}</title>
+<meta name="description" content="{{ site.description }}">
+<meta property="og:title" content="{{ site.title }}">
+<meta property="og:description" content="{{ site.description }}">
+<meta property="og:url" content="{{ site.url }}">
+<meta property="og:type" content="website">
+<link rel="canonical" href="{{ site.url }}/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #666;
+    --link: #0645ad;
+    --rule: #e5e5e5;
+    --tag-bg: #f2f2f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111;
+      --fg: #e8e8e8;
+      --muted: #9a9a9a;
+      --link: #7fb3ff;
+      --rule: #2a2a2a;
+      --tag-bg: #1f1f1f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1rem 4rem;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 2rem; margin: 0 0 .25rem; }
+  h1 small { display: block; font-size: 1rem; font-weight: normal; color: var(--muted); }
+  h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; }
+  p.lede { color: var(--muted); margin: 0 0 1.5rem; }
+  a { color: var(--link); }
+  ol.incidents { list-style: none; padding: 0; margin: 0; }
+  ol.incidents > li { padding: 1rem 0; border-top: 1px solid var(--rule); }
+  ol.incidents > li:last-child { border-bottom: 1px solid var(--rule); }
+  .head { font-weight: 600; }
+  .meta { color: var(--muted); font-weight: normal; }
+  dl { margin: .4rem 0 0; display: grid; grid-template-columns: 5.5rem 1fr; gap: .15rem .5rem; font-size: .92rem; }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  .tag { display: inline-block; background: var(--tag-bg); border-radius: 3px; padding: 0 .4rem; margin: 0 .25rem .25rem 0; font-size: .85rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .9rem; }
+  @media (max-width: 480px) { dl { grid-template-columns: 1fr; } dt { margin-top: .3rem; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Super Intelligent Incidents <small>sii.wtf</small></h1>
+  <p class="lede">{{ site.description }} Currently {{ site.data.incidents | size }} incidents.</p>
+
+  {% assign incidents = site.data.incidents | sort: "date" | reverse %}
+  <ol class="incidents">
+  {% for i in incidents %}
+    <li>
+      <div class="head">
+        <a href="{{ i.url }}" rel="noopener">{{ i.title }}</a>
+        <span class="meta">&mdash; {{ i.org }} &mdash; {{ i.source }} {{ i.date | date: "%Y" }}</span>
+      </div>
+      <dl>
+        <dt>agent</dt><dd>{{ i.agent }}</dd>
+        {% if i.involved %}<dt>involved</dt><dd>{% for t in i.involved %}<span class="tag">{{ t }}</span>{% endfor %}</dd>{% endif %}
+        <dt>impact</dt><dd>{{ i.impact }}</dd>
+      </dl>
+    </li>
+  {% endfor %}
+  </ol>
+
+  <h2 id="why">Why</h2>
+  <p>AI agents now write code, run shell commands, browse the web, read our inboxes and touch production. They are also easy to trick, confidently wrong, and fast. Very few of the resulting failures get written up in one place. This list exists so that people building and operating agents can learn from each other's incidents instead of repeating them.</p>
+  <p>"Super intelligent" is tongue in cheek. Most of these incidents did not need super intelligence, just an agent with a tool and no one checking.</p>
+
+  <h2 id="contributing">Contributing</h2>
+  <p>Know of a public incident caused by an AI agent? Open a pull request against <a href="{{ site.repo }}">{{ site.repo | remove: "https://" }}</a> and add an entry to <code>_data/incidents.yml</code>. Blog posts, postmortems, news reports, GitHub issues, advisories, talks and research write-ups are all welcome, as long as the source is public and the agent did the thing (or was the attack surface).</p>
+
+  <h2 id="thanks">Thanks</h2>
+  <p>Thanks to everyone who publishes postmortems and incident reports. Format inspired by <a href="https://k8s.af/">k8s.af</a>.</p>
+
+  <footer>
+    This page is generated from <a href="{{ site.repo }}">{{ site.repo | remove: "https://" }}</a>.
+  </footer>
+</main>
+</body>
+</html>

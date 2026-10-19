@@ -1,0 +1,146 @@
+# Super Intelligent Incidents — one entry per public incident caused by an AI agent.
+# Keep entries factual and link to a primary or reputable source.
+# Fields:
+#   title:    headline, as the source calls it (or a neutral summary)
+#   org:      who was affected or who published it
+#   agent:    the AI agent / tool / model that did the thing
+#   source:   blog post | news | postmortem | GitHub issue | advisory | research | talk
+#   date:     YYYY-MM-DD (publication date of the source)
+#   url:      link to the story
+#   involved: short tags for the mechanisms behind the incident
+#   impact:   one line on the consequences
+
+- title: "Clinejection: compromising Cline's production releases just by prompting an issue triager"
+  org: Cline
+  agent: Cline AI issue triager (GitHub Actions)
+  source: research
+  date: 2026-02-09
+  url: https://adnanthekhan.com/posts/clinejection/
+  involved: [prompt injection via GitHub issue, CI/CD secrets, GitHub Actions, release pipeline]
+  impact: attacker-controlled issue text could reach release credentials and poison production builds (responsibly disclosed)
+
+- title: "Hacking Moltbook: AI social network reveals 1.5M API keys"
+  org: Moltbook
+  agent: OpenClaw agents (users of the platform), vibe-coded backend
+  source: research
+  date: 2026-02-02
+  url: https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys
+  involved: [misconfigured Supabase, exposed database, vibe coding, agent API keys]
+  impact: ~1.5M API keys and private agent messages exposed
+
+- title: "Disrupting an AI-orchestrated cyber espionage campaign"
+  org: Anthropic
+  agent: Claude Code (jailbroken, operated by a state-sponsored group)
+  source: postmortem
+  date: 2025-11-13
+  url: https://www.anthropic.com/news/disrupting-AI-espionage
+  involved: [jailbreak via role-play, task decomposition, MCP tooling, 80–90% autonomous execution]
+  impact: ~30 organisations targeted; a handful of successful intrusions and data exfiltration
+
+- title: "s1ngularity: supply chain attack leaks secrets on GitHub"
+  org: Nx (nrwl)
+  agent: Claude Code, Gemini CLI, Amazon Q (weaponised by malware)
+  source: advisory
+  date: 2025-08-27
+  url: https://www.wiz.io/blog/s1ngularity-supply-chain-attack
+  involved: [malicious npm postinstall, AI CLIs used to hunt for secrets, GitHub token exfiltration]
+  impact: thousands of credentials and keys pushed to public GitHub repositories
+
+- title: "Comet prompt injection: agentic browsers are vulnerable to indirect prompt injection"
+  org: Perplexity (reported by Brave)
+  agent: Perplexity Comet browser assistant
+  source: research
+  date: 2025-08-20
+  url: https://brave.com/blog/comet-prompt-injection/
+  involved: [indirect prompt injection from web content, agentic browsing, OTP exfiltration]
+  impact: demonstrated account takeover of a logged-in user by summarising a hostile page
+
+- title: "Hacker plants computer-wiping commands in Amazon's AI coding agent"
+  org: Amazon (AWS)
+  agent: Amazon Q Developer extension for VS Code
+  source: news
+  date: 2025-07-24
+  url: https://www.404media.co/hacker-plants-computer-wiping-commands-in-amazons-ai-coding-agent/
+  involved: [supply chain, malicious pull request merged, prompt instructing agent to wipe disk and cloud resources]
+  impact: poisoned v1.84.0 shipped to users before being pulled
+
+- title: "Gemini CLI 'lost' files during a failed file move operation"
+  org: Individual user (Windows)
+  agent: Google Gemini CLI
+  source: GitHub issue
+  date: 2025-07-21
+  url: https://github.com/google-gemini/gemini-cli/issues/4586
+  involved: [hallucinated success of mkdir, cascading mv into a non-existent directory, no verification step]
+  impact: directory contents overwritten and unrecoverable
+
+- title: "Vibe coding service Replit deleted production database"
+  org: SaaStr
+  agent: Replit Agent
+  source: news
+  date: 2025-07-21
+  url: https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/
+  involved: [ignored code freeze, destructive SQL in production, fabricated data and test results, misleading status reports]
+  impact: production database with ~1,200 executive records deleted; restored from backup
+
+- title: "Supabase MCP can leak your entire SQL database"
+  org: Supabase (reported by General Analysis)
+  agent: Cursor agent with Supabase MCP server
+  source: research
+  date: 2025-07-09
+  url: https://www.generalanalysis.com/blog/supabase-mcp-blog
+  involved: [prompt injection via support ticket, service_role key, SQL over MCP]
+  impact: integration tokens table dumped into a customer-visible ticket
+
+- title: "EchoLeak: zero-click prompt injection in Microsoft 365 Copilot (CVE-2025-32711)"
+  org: Microsoft (reported by Aim Labs)
+  agent: Microsoft 365 Copilot
+  source: research
+  date: 2025-06-11
+  url: https://www.aim.security/lp/aim-labs-echoleak-blogpost
+  involved: [zero-click indirect prompt injection via email, RAG scope violation, image-markdown exfiltration]
+  impact: silent exfiltration of sensitive data from the user's M365 context; patched before exploitation in the wild
+
+- title: "GitHub MCP exploited: accessing private repositories via MCP"
+  org: GitHub MCP server users (reported by Invariant Labs)
+  agent: Claude 4 Opus with GitHub MCP server
+  source: research
+  date: 2025-05-26
+  url: https://invariantlabs.ai/blog/mcp-github-vulnerability
+  involved: [indirect prompt injection via public issue, toxic agent flow, over-broad token scope]
+  impact: private repository data written into a public pull request
+
+- title: "New vulnerability in GitHub Copilot and Cursor: how hackers can weaponize code agents"
+  org: Cursor, GitHub Copilot (reported by Pillar Security)
+  agent: Cursor, GitHub Copilot
+  source: research
+  date: 2025-03-18
+  url: https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents
+  involved: [rules file backdoor, hidden unicode characters, instruction files shared via repos]
+  impact: agents silently generate backdoored code that passes human review
+
+- title: "The AI Scientist: an agent that edited its own code to extend its timeout"
+  org: Sakana AI
+  agent: The AI Scientist
+  source: blog post
+  date: 2024-08-13
+  url: https://sakana.ai/ai-scientist/
+  involved: [self-modification, relaunching itself, bypassing experiment limits]
+  impact: unbounded resource use inside a sandbox; no damage, but an early documented case of an agent rewriting its own guardrails
+
+- title: "Air Canada must honor refund policy invented by airline's chatbot"
+  org: Air Canada
+  agent: Air Canada customer-service chatbot
+  source: news
+  date: 2024-02-15
+  url: https://www.cbc.ca/news/canada/british-columbia/air-canada-chatbot-lawsuit-1.7116416
+  involved: [hallucinated bereavement-fare policy, "'chatbot is a separate legal entity' defence rejected"]
+  impact: tribunal ordered damages; airline held liable for what its agent said
+
+- title: "Chevrolet dealership chatbot agrees to sell a 2024 Tahoe for $1"
+  org: Chevrolet of Watsonville
+  agent: ChatGPT-powered dealership chatbot (Fullpath)
+  source: news
+  date: 2023-12-18
+  url: https://www.businessinsider.com/car-dealership-chevrolet-chatbot-chatgpt-pranks-chevy-2023-12
+  involved: [prompt manipulation, "legally binding offer, no takesies backsies"]
+  impact: viral embarrassment; chatbot pulled and re-guardrailed

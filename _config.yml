@@ -1,0 +1,13 @@
+title: Super Intelligent Incidents
+description: A compiled list of links to public incidents caused by AI agents. Most recent on top.
+url: https://sii.wtf
+repo: https://github.com/saurabhjha1/sii
+
+markdown: kramdown
+exclude:
+  - README.md
+  - CONTRIBUTING.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock
+  - vendor
