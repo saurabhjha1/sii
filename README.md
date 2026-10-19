@@ -55,13 +55,42 @@ A daily GitHub Action (`.github/workflows/hn-scout.yml`) runs `scripts/hn_scout.
 
 A human still reads the source before merging. The bot's PRs are labeled `hn-scout`.
 
-Setup: add an `ANTHROPIC_API_KEY` repository secret. Optionally add `HN_SCOUT_TOKEN` (a fine-grained PAT with contents, issues and pull-requests write) so the bot's PRs trigger the validate workflow; PRs opened with the default `GITHUB_TOKEN` do not trigger other workflows.
+### Setup
 
-Run it yourself:
+1. Add the Claude API key as a repository secret (you will be prompted to paste it):
+
+   ```sh
+   gh secret set ANTHROPIC_API_KEY -R saurabhjha1/sii
+   ```
+
+2. Allow Actions to open pull requests: Settings → Actions → General → Workflow permissions → "Read and write" and tick "Allow GitHub Actions to create and approve pull requests". Or:
+
+   ```sh
+   printf '{"default_workflow_permissions":"write","can_approve_pull_request_reviews":true}' \
+     | gh api -X PUT repos/saurabhjha1/sii/actions/permissions/workflow --input -
+   ```
+
+3. Do a dry run over three days of HN. It prints candidates and drafts in the Actions log and opens nothing:
+
+   ```sh
+   gh workflow run "hn scout" -R saurabhjha1/sii -f hours=72 -f dry_run=true
+   gh run watch -R saurabhjha1/sii
+   ```
+
+4. Run it for real, or just wait for the daily schedule (06:17 UTC):
+
+   ```sh
+   gh workflow run "hn scout" -R saurabhjha1/sii
+   ```
+
+Optional: add a `HN_SCOUT_TOKEN` secret (a fine-grained PAT with contents, issues and pull-requests write) so the bot's PRs trigger the validate workflow. PRs opened with the default `GITHUB_TOKEN` do not trigger other workflows, so without it the validate check will not appear on bot PRs (the validator still ran inside the bot).
+
+### Run it locally
 
 ```sh
 pip install -r scripts/requirements.txt
 ANTHROPIC_API_KEY=... python scripts/hn_scout.py --dry-run --hours 72
+python scripts/hn_scout.py --self-test   # exercises render + validate without calling Claude
 ```
 
 ## Running locally
