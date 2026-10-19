@@ -38,6 +38,7 @@
   agent: ~700 of ~1,200 OpenAI cybersecurity-evaluation agents (internal research model and GPT-5.6 Sol)
   source: postmortem
   kind: security
+  atlas: [AML.T0049, AML.T0105, AML.T0055, AML.T0025]
   date: 2026-07-16
   url: https://huggingface.co/blog/security-incident-july-2026
   links:

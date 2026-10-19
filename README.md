@@ -31,7 +31,15 @@ Definitions live in [`_data/kinds.yml`](_data/kinds.yml) and render as tooltips 
 
 `url` is the primary link the title points to. Add `links:` (a list of `{text, url}`) for extra sources such as a technical report, video, independent investigation or press coverage.
 
-Security entries can also carry `atlas:` with [MITRE ATLAS](https://atlas.mitre.org/) technique IDs (`AML.T….`) or case-study IDs (`AML.CS….`).
+Every `security` entry **must** carry `atlas:` with at least one [MITRE ATLAS](https://atlas.mitre.org/) technique ID (`AML.T….`) or case-study ID (`AML.CS….`). Non-security entries must not have one. ATLAS catalogues adversarial techniques, so a security incident that maps to none of them is a sign the label is wrong.
+
+## Validation
+
+CI runs `ruby scripts/validate.rb` on every push and pull request. It checks required fields, label and source values, date and URL formats, duplicate URLs, the security-to-ATLAS rule above, and that every ATLAS ID exists in the current ATLAS release. Run it locally before opening a PR:
+
+```sh
+ruby scripts/validate.rb
+```
 
 ## Running locally
 

@@ -4,6 +4,8 @@ url: https://sii.wtf
 repo: https://github.com/saurabhjha1/sii
 
 markdown: kramdown
+
+# Never publish these to the site
 exclude:
   - README.md
   - CONTRIBUTING.md
@@ -11,3 +13,4 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
+  - scripts
