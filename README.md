@@ -51,7 +51,7 @@ A daily GitHub Action (`.github/workflows/hn-scout.yml`) runs `scripts/hn_scout.
 2. Drops anything whose URL is already listed or whose HN id was already filed.
 3. Sends the titles to Claude, which flags stories that might be a qualifying incident.
 4. For each flagged story, Claude reads the article, the HN thread and the primary source, then drafts an entry.
-5. The draft is run through `scripts/validate.rb`. If it passes, the bot opens an issue (with its reasoning) and a PR that adds the entry and closes the issue. If it fails, only the issue is opened.
+5. The draft is run through `scripts/validate.rb`. If it passes, the bot opens an issue (with its reasoning) and a PR that adds the entry and closes the issue. If it fails, or Claude judges the incident still evolving (no postmortem yet, facts unconfirmed), only the issue is opened, labeled `evolving`, to be published once the facts settle.
 
 A human still reads the source before merging. The bot's PRs are labeled `hn-scout`.
 

@@ -40,6 +40,7 @@ KINDS = ROOT / "_data" / "kinds.yml"
 MODEL = os.environ.get("SII_MODEL", "claude-opus-5-5")
 REPO = os.environ.get("GITHUB_REPOSITORY", "saurabhjha1/sii")
 LABEL = "hn-scout"
+EVOLVING_LABEL = "evolving"
 HN_API = "https://hn.algolia.com/api/v1/search_by_date"
 UA = "sii-wtf-hn-scout (+https://sii.wtf)"
 
@@ -216,7 +217,8 @@ class Entry(BaseModel):
 
 class Draft(BaseModel):
     qualifies: bool
-    reasoning: str = Field(description="3-6 sentences: what happened, why it does or does not meet each criterion, what you were unsure about")
+    still_evolving: bool = Field(description="True when the incident is still unfolding: the affected party says it is ongoing, no postmortem exists yet, or key facts (scope, attack path, numbers) are unconfirmed. Such incidents get an issue but no PR until they settle")
+    reasoning: str = Field(description="3-6 sentences: what happened, why it does or does not meet each criterion, what you were unsure about, and if still evolving what is missing")
     entry: Optional[Entry] = Field(description="The drafted entry; null when it does not qualify")
 
 
@@ -346,8 +348,12 @@ def open_issue(story: dict, draft: Draft, entry_yaml: Optional[str], validation:
         body += ["## Validator", "```", validation, "```", ""]
         if not valid:
             body += ["The draft failed validation, so no PR was opened. Fix the entry and open one by hand.", ""]
+        elif draft.still_evolving:
+            body += ["The incident is still unfolding, so no PR was opened. Publish once a postmortem or confirmed facts exist, and swap the primary link to it.", ""]
     body += ["Please double-check every link, the date, the labels and the ATLAS IDs before merging."]
-    out = gh("issue", "create", "-R", REPO, "--title", title, "--label", LABEL, "--body", "\n".join(body))
+    labels = [LABEL] + ([EVOLVING_LABEL] if draft.still_evolving else [])
+    out = gh("issue", "create", "-R", REPO, "--title", title, "--body", "\n".join(body),
+             *sum((["--label", l] for l in labels), []))
     return out.strip().splitlines()[-1]
 
 
@@ -382,6 +388,8 @@ def open_pr(story: dict, draft: Draft, entry_yaml: str, issue_url: str) -> str:
 def ensure_label() -> None:
     gh("label", "create", LABEL, "-R", REPO, "--color", "5319e7",
        "--description", "Filed by the Hacker News scout", "--force", check=False)
+    gh("label", "create", EVOLVING_LABEL, "-R", REPO, "--color", "fbca04",
+       "--description", "Incident still unfolding; publish once the facts settle", "--force", check=False)
 
 
 # ----------------------------------------------------------------------------- main
@@ -456,7 +464,7 @@ def main() -> int:
             continue
         entry_yaml = render_entry(draft.entry)
         valid, out = validate_with(entry_yaml)
-        print(f"  validator: {'OK' if valid else 'FAILED'}")
+        print(f"  validator: {'OK' if valid else 'FAILED'}{'  (still evolving: issue only)' if draft.still_evolving else ''}")
         print(entry_yaml)
         if not valid:
             print(out)
@@ -464,7 +472,7 @@ def main() -> int:
             continue
         issue_url = open_issue(story, draft, entry_yaml, out, valid)
         print(f"  issue: {issue_url}")
-        if valid:
+        if valid and not draft.still_evolving:
             pr_url = open_pr(story, draft, entry_yaml, issue_url)
             print(f"  pr: {pr_url}")
         filed += 1
