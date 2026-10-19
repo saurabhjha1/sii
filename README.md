@@ -13,6 +13,7 @@ Inspired by [k8s.af](https://k8s.af/).
 What qualifies:
 
 - The source is **public** (blog post, postmortem, news report, GitHub issue, advisory, talk, research write-up).
+- Pick one `kind`: **security** (an attacker got something through the agent), **destruction** (the agent broke or deleted something on its own), or **rogue** (no attacker, nothing destroyed, but the agent went off-script).
 - An **AI agent did the thing**, or was the attack surface: it ran the command, sent the email, leaked the data, agreed to the $1 car. Plain model-output mishaps (a bad chat answer with no action taken) are out of scope unless they caused real-world consequences.
 - Keep `impact` to one line and keep opinions out of the entry. Link, don't editorialise.
 

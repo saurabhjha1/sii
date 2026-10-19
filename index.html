@@ -45,7 +45,8 @@ layout: null
   h1 { font-size: 2rem; margin: 0 0 .25rem; }
   h1 small { display: block; font-size: 1rem; font-weight: normal; color: var(--muted); }
   h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; }
-  p.lede { color: var(--muted); margin: 0 0 1.5rem; }
+  p.lede { color: var(--muted); margin: 0 0 1rem; }
+  p.def { color: var(--muted); font-size: .9rem; margin: 0 0 1.5rem; }
   a { color: var(--link); }
   ol.incidents { list-style: none; padding: 0; margin: 0; }
   ol.incidents > li { padding: 1rem 0; border-top: 1px solid var(--rule); }
@@ -55,6 +56,15 @@ layout: null
   dl { margin: .4rem 0 0; display: grid; grid-template-columns: 5.5rem 1fr; gap: .15rem .5rem; font-size: .92rem; }
   dt { color: var(--muted); }
   dd { margin: 0; }
+  .kind { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; border-radius: 3px; padding: .05rem .4rem; margin-right: .4rem; vertical-align: 2px; color: #fff; }
+  .kind-security { background: #c0392b; }
+  .kind-destruction { background: #d68910; }
+  .kind-rogue { background: #6c3fb5; }
+  .legend { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.5rem; padding: 0; list-style: none; font-size: .9rem; }
+  .legend button { font: inherit; cursor: pointer; background: var(--tag-bg); color: var(--fg); border: 1px solid var(--rule); border-radius: 999px; padding: .2rem .7rem; }
+  .legend button[aria-pressed="true"] { border-color: var(--fg); }
+  .legend .def { color: var(--muted); }
+  ol.incidents > li.hidden { display: none; }
   .tag { display: inline-block; background: var(--tag-bg); border-radius: 3px; padding: 0 .4rem; margin: 0 .25rem .25rem 0; font-size: .85rem; }
   footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .9rem; }
   @media (max-width: 480px) { dl { grid-template-columns: 1fr; } dt { margin-top: .3rem; } }
@@ -65,12 +75,22 @@ layout: null
   <h1>Super Intelligent Incidents <small>sii.wtf</small></h1>
   <p class="lede">{{ site.description }} Currently {{ site.data.incidents | size }} incidents.</p>
 
+  {% assign by_kind = site.data.incidents | group_by: "kind" %}
+  <ul class="legend">
+    <li><button type="button" data-kind="all" aria-pressed="true">all ({{ site.data.incidents | size }})</button></li>
+    {% assign kinds = "security,destruction,rogue" | split: "," %}
+    {% for k in kinds %}{% for g in by_kind %}{% if g.name == k %}
+    <li><button type="button" data-kind="{{ k }}" aria-pressed="false"><span class="kind kind-{{ k }}">{{ k }}</span>{{ g.size }}</button></li>
+    {% endif %}{% endfor %}{% endfor %}
+  </ul>
+  <p class="def"><strong>security</strong>: an attacker got something through the agent. <strong>destruction</strong>: the agent broke or deleted something on its own. <strong>rogue</strong>: no attacker, nothing destroyed, but the agent went off-script.</p>
+
   {% assign incidents = site.data.incidents | sort: "date" | reverse %}
   <ol class="incidents">
   {% for i in incidents %}
-    <li>
+    <li data-kind="{{ i.kind }}">
       <div class="head">
-        <a href="{{ i.url }}" rel="noopener">{{ i.title }}</a>
+        <span class="kind kind-{{ i.kind }}">{{ i.kind }}</span><a href="{{ i.url }}" rel="noopener">{{ i.title }}</a>
         <span class="meta">&mdash; {{ i.org }} &mdash; {{ i.source }} {{ i.date | date: "%Y" }}</span>
       </div>
       <dl>
@@ -96,5 +116,16 @@ layout: null
     This page is generated from <a href="{{ site.repo }}">{{ site.repo | remove: "https://" }}</a>.
   </footer>
 </main>
+<script>
+  document.querySelectorAll('.legend button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var k = b.dataset.kind;
+      document.querySelectorAll('.legend button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+      document.querySelectorAll('ol.incidents > li').forEach(function (li) {
+        li.classList.toggle('hidden', k !== 'all' && li.dataset.kind !== k);
+      });
+    });
+  });
+</script>
 </body>
 </html>
