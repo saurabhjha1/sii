@@ -13,11 +13,16 @@ SOURCES  = ["blog post", "news", "postmortem", "GitHub issue", "advisory"].freez
 ATLAS_ID = /\AAML\.(T\d{4}(\.\d{3})?|CS\d{4})\z/
 ATLAS_URL = "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/ATLAS.yaml"
 
+# Ruby >= 3.1 loads YAML safely by default and rejects Date values, so permit them explicitly.
+def load_yaml(path)
+  YAML.safe_load(File.read(path), permitted_classes: [Date, Time], aliases: true, filename: path)
+end
+
 errors = []
 err = ->(e, msg) { errors << "#{(e['title'] || '<untitled>')[0, 60]}: #{msg}" }
 
-kinds = YAML.load_file(File.join(ROOT, "_data/kinds.yml")).map { |k| k["id"] }
-incidents = YAML.load_file(File.join(ROOT, "_data/incidents.yml"))
+kinds = load_yaml(File.join(ROOT, "_data/kinds.yml")).map { |k| k["id"] }
+incidents = load_yaml(File.join(ROOT, "_data/incidents.yml"))
 abort "incidents.yml must be a list" unless incidents.is_a?(Array)
 
 # Known ATLAS IDs, if we can get them. Missing data downgrades the existence check to a warning.
