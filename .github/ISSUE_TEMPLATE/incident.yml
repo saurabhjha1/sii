@@ -1,0 +1,83 @@
+name: Submit an incident
+description: Suggest a public production incident caused by an AI agent. A maintainer will turn it into an entry.
+title: "[incident] "
+labels: [incident]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Real deployments only. Researcher proof-of-concepts are out of scope ([MITRE ATLAS](https://atlas.mitre.org/studies) catalogues those).
+        Prefer a pull request against `_data/incidents.yml` if you're comfortable with one.
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Headline, as the source calls it, or a neutral one-line summary.
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Primary source URL
+      description: Public link that loads without a login.
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: Additional sources
+      description: One per line. Technical report, video, independent investigation, press coverage.
+      placeholder: |
+        OpenAI technical report (PDF) - https://...
+        METR investigation - https://...
+  - type: input
+    id: org
+    attributes:
+      label: Organisation affected
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Agent
+      description: The AI agent, tool or model that did the thing.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      description: Pick every label that applies. Most incidents get exactly one; pick more than one only if it genuinely belongs to more than one team.
+      multiple: true
+      options:
+        - security (an adversary or untrusted input steered the agent)
+        - reliability (no attacker; the agent failed at its job - outage, data loss, wrong output)
+        - performance (no attacker, nothing wrong, but slower, saturated or more expensive than it should be)
+    validations:
+      required: true
+  - type: input
+    id: atlas
+    attributes:
+      label: MITRE ATLAS IDs
+      description: Required if you picked security. Comma-separated technique or case-study IDs from https://atlas.mitre.org, e.g. AML.T0051.
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: Publication date of the primary source, YYYY-MM-DD.
+    validations:
+      required: true
+  - type: input
+    id: involved
+    attributes:
+      label: Involved
+      description: Comma-separated tags for the mechanisms behind the incident.
+    validations:
+      required: true
+  - type: input
+    id: impact
+    attributes:
+      label: Impact
+      description: One factual line on the consequences.
+    validations:
+      required: true

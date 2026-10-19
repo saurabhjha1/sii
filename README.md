@@ -6,9 +6,11 @@ Inspired by [k8s.af](https://k8s.af/).
 
 ## Adding an incident
 
+Either [open an issue](../../issues/new?template=incident.yml) using the incident form, or:
+
 1. Fork this repo.
-2. Add an entry to [`_data/incidents.yml`](_data/incidents.yml). Field reference is at the top of that file.
-3. Open a pull request.
+2. Add an entry to [`_data/incidents.yml`](_data/incidents.yml). A field reference and a copy-paste template are at the top of that file.
+3. Run `ruby scripts/validate.rb` and open a pull request.
 
 What qualifies:
 
@@ -19,7 +21,7 @@ What qualifies:
 
 ## Labels
 
-Each incident gets exactly one `kind`. The label names the team that would be paged, not what the agent did. Decide in this order:
+`kind` is a list of one or more labels. The label names the team that would be paged, not what the agent did. Most incidents get one; use more than one (shown as **mixed** on the site) only when the incident genuinely belongs to more than one team, e.g. `[security, reliability]` for a breach that also caused an outage. For each label, decide in this order:
 
 | ask | if yes | covers |
 |---|---|---|
@@ -31,7 +33,7 @@ Definitions live in [`_data/kinds.yml`](_data/kinds.yml) and render as tooltips 
 
 `url` is the primary link the title points to. Add `links:` (a list of `{text, url}`) for extra sources such as a technical report, video, independent investigation or press coverage.
 
-Every `security` entry **must** carry `atlas:` with at least one [MITRE ATLAS](https://atlas.mitre.org/) technique ID (`AML.T….`) or case-study ID (`AML.CS….`). Non-security entries must not have one. ATLAS catalogues adversarial techniques, so a security incident that maps to none of them is a sign the label is wrong.
+Every entry whose `kind` includes `security` **must** carry `atlas:` with at least one [MITRE ATLAS](https://atlas.mitre.org/) technique ID (`AML.T….`) or case-study ID (`AML.CS….`). Non-security entries must not have one. ATLAS catalogues adversarial techniques, so a security incident that maps to none of them is a sign the label is wrong.
 
 ## Validation
 

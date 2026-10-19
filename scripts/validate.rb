@@ -36,7 +36,14 @@ seen_urls = {}
 incidents.each do |e|
   REQUIRED.each { |f| err.(e, "missing `#{f}`") if e[f].nil? || (e[f].respond_to?(:empty?) && e[f].empty?) }
 
-  err.(e, "`kind` must be one of #{kinds.join(', ')} (got #{e['kind'].inspect})") unless kinds.include?(e["kind"])
+  ek = e["kind"]
+  if !ek.is_a?(Array) || ek.empty?
+    err.(e, "`kind` must be a non-empty list, e.g. [security] or [security, reliability] (got #{ek.inspect})")
+    ek = []
+  end
+  (ek - kinds).each { |bad| err.(e, "`kind` #{bad.inspect} is not one of #{kinds.join(', ')}") }
+  err.(e, "`kind` has duplicates") if ek.uniq.size != ek.size
+  security = ek.include?("security")
   err.(e, "`source` must be one of #{SOURCES.join(', ')} (got #{e['source'].inspect})") unless SOURCES.include?(e["source"])
 
   d = e["date"]
@@ -65,11 +72,11 @@ incidents.each do |e|
       err.(e, "`atlas` ID #{a} does not exist in MITRE ATLAS") if atlas_ids && a =~ ATLAS_ID && !atlas_ids.include?(a)
     end
   end
-  if e["kind"] == "security" && Array(atlas).empty?
-    err.(e, "kind is `security` but no `atlas` IDs. Every security incident must map to at least one MITRE ATLAS technique (https://atlas.mitre.org/techniques)")
+  if security && Array(atlas).empty?
+    err.(e, "kind includes `security` but no `atlas` IDs. Every security incident must map to at least one MITRE ATLAS technique (https://atlas.mitre.org/techniques)")
   end
-  if e["kind"] != "security" && atlas && Array(atlas).any?
-    err.(e, "`atlas` IDs are only for `security` incidents (ATLAS catalogues adversarial techniques; this entry is #{e['kind']})")
+  if !security && atlas && Array(atlas).any?
+    err.(e, "`atlas` IDs are only for `security` incidents (ATLAS catalogues adversarial techniques; this entry is #{ek.join('+')})")
   end
 end
 

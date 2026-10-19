@@ -7,22 +7,41 @@
 #   org:      who was affected or who published it
 #   agent:    the AI agent / tool / model that did the thing
 #   source:   blog post | news | postmortem | GitHub issue | advisory
-#   kind:     exactly one of the ids in kinds.yml. Decide in this order:
+#   kind:     list of one or more ids from kinds.yml. Most incidents get one; use two or more ("mixed")
+#             only when the incident genuinely belongs to more than one team, e.g. a breach that also
+#             caused an outage. Decide each in this order:
 #               1. Was there an adversary, or did untrusted input steer the agent?  -> security
 #               2. No adversary, but the system did the wrong thing or didn't work? -> reliability
 #               3. No adversary, nothing wrong, but worse than it should be?        -> performance
-#   atlas:    optional list of MITRE ATLAS technique or case-study IDs (https://atlas.mitre.org), e.g. [AML.T0051]
+#   atlas:    MITRE ATLAS technique or case-study IDs (https://atlas.mitre.org), e.g. [AML.T0051].
+#             Required when kind includes security; not allowed otherwise.
 #   date:     YYYY-MM-DD (publication date of the source)
 #   url:      primary link to the story (what the title points to)
 #   links:    optional extra sources, each {text, url}: a tech report, video, independent investigation, news coverage
 #   involved: short tags for the mechanisms behind the incident
 #   impact:   one line on the consequences
+#
+# Template (copy, uncomment, fill in):
+#
+# - title: ""
+#   org: ""
+#   agent: ""
+#   source: news
+#   kind: [security]            # or [reliability], [performance], or several e.g. [security, reliability]
+#   atlas: [AML.T0051]          # only when kind includes security
+#   date: 2026-01-01
+#   url: https://
+#   links:                      # optional extra sources
+#     - text: ""
+#       url: https://
+#   involved: [tag one, tag two]
+#   impact: ""
 
 - title: "Meta says a Claude tool's read traffic triggered the No Kings Instagram suspension"
   org: Meta / No Kings Coalition
   agent: Claude tool reading Instagram profiles, posts and hashtags on behalf of the account
   source: postmortem
-  kind: reliability
+  kind: [reliability]
   date: 2026-10-18
   url: https://x.com/andymstone/status/2111920686306627816
   links:
@@ -37,7 +56,7 @@
   org: Hugging Face / OpenAI
   agent: ~700 of ~1,200 OpenAI cybersecurity-evaluation agents (internal research model and GPT-5.6 Sol)
   source: postmortem
-  kind: security
+  kind: [security]
   atlas: [AML.T0049, AML.T0105, AML.T0055, AML.T0025]
   date: 2026-07-16
   url: https://huggingface.co/blog/security-incident-july-2026
@@ -59,7 +78,7 @@
   org: Moltbook
   agent: OpenClaw agents (users of the platform), vibe-coded backend
   source: advisory
-  kind: security
+  kind: [security]
   atlas: [AML.T0083]
   date: 2026-02-02
   url: https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys
@@ -70,7 +89,7 @@
   org: Anthropic
   agent: Claude Code (jailbroken, operated by a state-sponsored group)
   source: postmortem
-  kind: security
+  kind: [security]
   atlas: [AML.T0054, AML.T0053]
   date: 2025-11-13
   url: https://www.anthropic.com/news/disrupting-AI-espionage
@@ -81,7 +100,7 @@
   org: Nx (nrwl)
   agent: Claude Code, Gemini CLI, Amazon Q (weaponised by malware)
   source: advisory
-  kind: security
+  kind: [security]
   atlas: [AML.T0010, AML.T0053]
   date: 2025-08-27
   url: https://www.wiz.io/blog/s1ngularity-supply-chain-attack
@@ -92,7 +111,7 @@
   org: Amazon (AWS)
   agent: Amazon Q Developer extension for VS Code
   source: news
-  kind: security
+  kind: [security]
   atlas: [AML.T0010, AML.T0101, AML.CS0047]
   date: 2025-07-24
   url: https://www.404media.co/hacker-plants-computer-wiping-commands-in-amazons-ai-coding-agent/
@@ -103,7 +122,7 @@
   org: Individual user (Windows)
   agent: Google Gemini CLI
   source: GitHub issue
-  kind: reliability
+  kind: [reliability]
   date: 2025-07-21
   url: https://github.com/google-gemini/gemini-cli/issues/4586
   involved: [hallucinated success of mkdir, cascading mv into a non-existent directory, no verification step]
@@ -113,7 +132,7 @@
   org: SaaStr
   agent: Replit Agent
   source: news
-  kind: reliability
+  kind: [reliability]
   date: 2025-07-21
   url: https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/
   involved: [ignored code freeze, destructive SQL in production, fabricated data and test results, misleading status reports]
@@ -123,7 +142,7 @@
   org: Air Canada
   agent: Air Canada customer-service chatbot
   source: news
-  kind: reliability
+  kind: [reliability]
   date: 2024-02-15
   url: https://www.cbc.ca/news/canada/british-columbia/air-canada-chatbot-lawsuit-1.7116416
   involved: [hallucinated bereavement-fare policy, "'chatbot is a separate legal entity' defence rejected"]
@@ -133,7 +152,7 @@
   org: Chevrolet of Watsonville
   agent: ChatGPT-powered dealership chatbot (Fullpath)
   source: news
-  kind: security
+  kind: [security]
   atlas: [AML.T0051]
   date: 2023-12-18
   url: https://www.businessinsider.com/car-dealership-chevrolet-chatbot-chatgpt-pranks-chevy-2023-12

@@ -51,6 +51,7 @@ layout: null
   .kind-security { background: #c0392b; }
   .kind-reliability { background: #d68910; }
   .kind-performance { background: #2471a3; }
+  .kind-mixed { background: #555; }
   .legend { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 .5rem; padding: 0; list-style: none; font-size: .9rem; }
   .legend button { font: inherit; cursor: pointer; background: var(--tag-bg); color: var(--fg); border: 1px solid var(--rule); border-radius: 999px; padding: .2rem .7rem; }
   .legend button[aria-pressed="true"] { border-color: var(--fg); }
@@ -78,24 +79,25 @@ layout: null
   <h1>Super Intelligent Incidents <small>sii.wtf</small></h1>
   <p class="lede">{{ site.description }} Currently {{ site.data.incidents | size }} incidents.</p>
 
-  {% assign by_kind = site.data.incidents | group_by: "kind" %}
   <ul class="legend">
     <li><button type="button" data-kind="all" aria-pressed="true" title="Show every incident">all ({{ site.data.incidents | size }})</button></li>
     {% for k in site.data.kinds %}
       {% assign n = 0 %}
-      {% for g in by_kind %}{% if g.name == k.id %}{% assign n = g.size %}{% endif %}{% endfor %}
+      {% for i in site.data.incidents %}{% if i.kind contains k.id %}{% assign n = n | plus: 1 %}{% endif %}{% endfor %}
       <li><button type="button" data-kind="{{ k.id }}" aria-pressed="false" title="{{ k.tip }}"><span class="kind kind-{{ k.id }}">{{ k.id }}</span>{{ n }}</button></li>
     {% endfor %}
+    {% assign mixed = 0 %}
+    {% for i in site.data.incidents %}{% if i.kind.size > 1 %}{% assign mixed = mixed | plus: 1 %}{% endif %}{% endfor %}
+    <li><button type="button" data-kind="mixed" aria-pressed="false" title="More than one label applies, e.g. a breach that also took the service down."><span class="kind kind-mixed">mixed</span>{{ mixed }}</button></li>
   </ul>
   <p class="hint">Hover a label for its definition, or see <a href="#labels">how incidents are labeled</a>.</p>
 
   {% assign incidents = site.data.incidents | sort: "date" | reverse %}
   <ol class="incidents">
   {% for i in incidents %}
-    {% assign k = site.data.kinds | where: "id", i.kind | first %}
-    <li data-kind="{{ i.kind }}">
+    <li data-kind="{{ i.kind | join: " " }}">
       <div class="head">
-        <span class="kind kind-{{ i.kind }}" title="{{ k.tip }}">{{ i.kind }}</span><a href="{{ i.url }}" rel="noopener">{{ i.title }}</a>
+        {% for kid in i.kind %}{% assign k = site.data.kinds | where: "id", kid | first %}<span class="kind kind-{{ kid }}" title="{{ k.tip }}">{{ kid }}</span>{% endfor %}<a href="{{ i.url }}" rel="noopener">{{ i.title }}</a>
         <span class="meta">&mdash; {{ i.org }} &mdash; {{ i.source }} {{ i.date | date: "%Y" }}</span>
       </div>
       <dl>
@@ -110,7 +112,7 @@ layout: null
   </ol>
 
   <h2 id="labels">How incidents are labeled</h2>
-  <p>Each incident gets exactly one label. The label names the team that would be paged, not what the agent did. Causes go in the <em>involved</em> tags. Decide in this order:</p>
+  <p>The label names the team that would be paged, not what the agent did. Causes go in the <em>involved</em> tags. Most incidents get one label; an incident gets more than one (<span class="kind kind-mixed" title="More than one label applies, e.g. a breach that also took the service down.">mixed</span>) only when it genuinely belongs to more than one team, such as a breach that also caused an outage. For each label, decide in this order:</p>
   <ol class="rules">
     <li><strong>Was there an adversary, or did untrusted input steer the agent?</strong> Then it is <span class="kind kind-security" title="{{ site.data.kinds[0].tip }}">security</span>. Leaks, exfiltration, supply chain, prompt injection, jailbreaks.</li>
     <li><strong>No adversary, but the system did the wrong thing or didn't work?</strong> Then it is <span class="kind kind-reliability" title="{{ site.data.kinds[1].tip }}">reliability</span>. Outages, data loss, elevated error rates, wrong output in production.</li>
@@ -138,7 +140,9 @@ layout: null
       var k = b.dataset.kind;
       document.querySelectorAll('.legend button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
       document.querySelectorAll('ol.incidents > li').forEach(function (li) {
-        li.classList.toggle('hidden', k !== 'all' && li.dataset.kind !== k);
+        var kinds = li.dataset.kind.split(' ');
+        var show = k === 'all' || (k === 'mixed' ? kinds.length > 1 : kinds.indexOf(k) !== -1);
+        li.classList.toggle('hidden', !show);
       });
     });
   });
