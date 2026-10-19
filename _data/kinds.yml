@@ -1,0 +1,8 @@
+# The three incident kinds. The label names the team that would be paged, not what the agent did.
+# Each incident gets exactly one. Causes go in the entry's `involved` tags.
+- id: security
+  tip: "An adversary or untrusted input steered the agent: leak, exfiltration, supply chain, prompt injection, jailbreak."
+- id: reliability
+  tip: "No attacker. The agent failed at its job: outage, data loss, elevated error rate, wrong output in production."
+- id: performance
+  tip: "No attacker, nothing wrong, but worse than it should be: latency, saturation, runaway resource or cost consumption."

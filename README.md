@@ -1,6 +1,6 @@
 # Super Intelligent Incidents — [sii.wtf](https://sii.wtf)
 
-A compiled list of links to public incidents (security or otherwise) caused by AI agents. Most recent on top.
+A compiled list of links to public production incidents (security or otherwise) caused by AI agents. Most recent on top.
 
 Inspired by [k8s.af](https://k8s.af/).
 
@@ -12,10 +12,26 @@ Inspired by [k8s.af](https://k8s.af/).
 
 What qualifies:
 
-- The source is **public** (blog post, postmortem, news report, GitHub issue, advisory, talk, research write-up).
-- Pick one `kind`: **security** (an attacker got something through the agent), **destruction** (the agent broke or deleted something on its own), or **rogue** (no attacker, nothing destroyed, but the agent went off-script).
-- An **AI agent did the thing**, or was the attack surface: it ran the command, sent the email, leaked the data, agreed to the $1 car. Plain model-output mishaps (a bad chat answer with no action taken) are out of scope unless they caused real-world consequences.
+- The source is **public** (blog post, postmortem, news report, GitHub issue, advisory).
+- It **happened to a real deployment**. Researcher proof-of-concepts and lab exercises are out of scope; [MITRE ATLAS](https://atlas.mitre.org/studies) catalogues those.
+- An **AI agent did the thing**, or was the attack surface: it ran the command, sent the email, leaked the data, agreed to the $1 car.
 - Keep `impact` to one line and keep opinions out of the entry. Link, don't editorialise.
+
+## Labels
+
+Each incident gets exactly one `kind`. The label names the team that would be paged, not what the agent did. Decide in this order:
+
+| ask | if yes | covers |
+|---|---|---|
+| Was there an adversary, or did untrusted input steer the agent? | `security` | leaks, exfiltration, supply chain, prompt injection, jailbreaks |
+| No adversary, but the system did the wrong thing or didn't work? | `reliability` | outages, data loss, elevated error rates, wrong output in production |
+| No adversary, nothing wrong, but worse than it should be? | `performance` | latency, saturation, runaway resource or cost consumption |
+
+Definitions live in [`_data/kinds.yml`](_data/kinds.yml) and render as tooltips on the site.
+
+`url` is the primary link the title points to. Add `links:` (a list of `{text, url}`) for extra sources such as a technical report, video, independent investigation or press coverage.
+
+Security entries can also carry `atlas:` with [MITRE ATLAS](https://atlas.mitre.org/) technique IDs (`AML.T….`) or case-study IDs (`AML.CS….`).
 
 ## Running locally
 
