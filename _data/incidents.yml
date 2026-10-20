@@ -37,6 +37,22 @@
 #   involved: [tag one, tag two]
 #   impact: ""
 
+- title: "Exposed Cairn panels show AI agents breaking into 100+ retail sites, including John Deere and SharkNinja"
+  org: Norforge (researchers); victims include John Deere, SharkNinja, Cummins
+  agent: Cairn agent harness driving coding-agent workers, operated by financially motivated criminals
+  source: news
+  kind: [security]
+  atlas: [AML.T0049, AML.T0053, AML.T0055]
+  date: 2026-10-19
+  url: https://www.theverge.com/ai-artificial-intelligence/1013643/ai-agents-hack-john-deere-shark-ninja-cummins
+  links:
+    - text: Norforge research
+      url: https://norforge.com/blog/inside_cairn
+    - text: Reuters
+      url: https://www.reuters.com/legal/government/how-one-hacker-used-ai-agents-few-thousand-dollars-break-into-scores-sites-2026-10-19/
+  involved: [20+ unsecured agent control panels found via internet scanning, 1100+ attack projects from one cluster, agents given only a target and a goal, ~10% success rate, ~23h per successful intrusion, persistent access confirmed live on a vendor site, hundreds of harvested secrets exposed on the open panels]
+  impact: 100+ sites in the US, Canada, Japan and Australia breached for about $5 of tokens each; SharkNinja confirmed a support site compromise, Cummins is investigating a vendor site
+
 - title: "Meta says a Claude tool's read traffic triggered the No Kings Instagram suspension"
   org: Meta / No Kings Coalition
   agent: Claude tool reading Instagram profiles, posts and hashtags on behalf of the account
