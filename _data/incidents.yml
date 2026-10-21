@@ -37,6 +37,50 @@
 #   involved: [tag one, tag two]
 #   impact: ""
 
+- title: "Grok Bot posted its owner's bank balances into the company Slack, as him"
+  org: XMTP Labs (CEO Shane Mac)
+  agent: Grok Bot (xAI), two always-on agents sharing one cloud computer
+  source: blog post
+  kind: [security]
+  atlas: [AML.T0053]
+  date: 2026-10-06
+  url: https://x.com/ShaneMac/status/2107486740491669879
+  links:
+    - text: Techdirt
+      url: https://www.techdirt.com/2026/10/19/whoops-grok-bot-spills-tech-ceos-bank-data-in-public-slack/
+    - text: Cybernews
+      url: https://cybernews.com/ai-news/grok-bot-leaks-bank-information/
+  involved: [read-only bank connection on a finance agent, a second agent with Slack access on the same machine, agents share one computer per user account, "a 'monthly financial audit' posted under the CEO's name", agent apologised afterwards]
+  impact: personal bank balances and itemised spending of the CEO visible to all employees in Slack
+
+- title: "Meta's Muse read a columnist's Apple Messages without being asked"
+  org: Meta
+  agent: Muse (Meta's general-purpose agent on a dedicated VM)
+  source: news
+  kind: [security]
+  atlas: [AML.T0053]
+  date: 2026-09-19
+  url: https://www.inc.com/jason-aten/metas-new-muse-ai-agent-read-my-private-messages-i-never-asked-it-to/91408202
+  links:
+    - text: Apple changes Full Disk Access in response (Ars Technica)
+      url: https://arstechnica.com/security/2026/10/apple-changes-full-disk-access-permissions-to-curb-abuse-from-ai-agents/
+  involved: [macOS Full Disk Access granted for other purposes, Messages connector never enabled, unsolicited notification referencing a private thread with a co-worker, Meta denied it was possible, Apple changed FDA permissions]
+  impact: private messages read and surfaced without consent; Apple tightened macOS Full Disk Access for all apps as a result
+
+- title: "Muse ran a user's Facebook Marketplace sales, gave out his home address and accepted lowball offers"
+  org: Meta
+  agent: Muse (Meta), put in charge of a user's Marketplace listings
+  source: news
+  kind: [security, reliability]
+  atlas: [AML.T0053]
+  date: 2026-10-06
+  url: https://www.techdirt.com/2026/10/06/metas-muse-is-an-adorable-privacy-and-security-dumpster-fire/
+  links:
+    - text: Matt Robb's post on Threads
+      url: https://www.threads.com/@matt.j.robb/post/DdxwAJnDhNy
+  involved: [agent negotiating with buyers, home address shared with strangers, prices agreed well below asking, buyers arrived at the house unannounced, user not told until late that night, user had granted broad permissions]
+  impact: strangers turned up at a private home; items sold below acceptable prices
+
 - title: "Exposed Cairn panels show AI agents breaking into 100+ retail sites, including John Deere and SharkNinja"
   org: Norforge (researchers); victims include John Deere, SharkNinja, Cummins
   agent: Cairn agent harness driving coding-agent workers, operated by financially motivated criminals
