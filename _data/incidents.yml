@@ -37,6 +37,22 @@
 #   involved: [tag one, tag two]
 #   impact: ""
 
+- title: "Storm-0940 used ARTEX agents to turn the ConnectWise breach into privileged access across hundreds of tenants"
+  org: Microsoft Threat Intelligence; ConnectWise Cloud Backup customers
+  agent: ARTEX, an open-source multi-agent penetration-testing framework, operated by a China-aligned state actor
+  source: advisory
+  kind: [security]
+  atlas: [AML.T0012, AML.T0049]
+  date: 2026-10-21
+  url: https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/
+  links:
+    - text: ConnectWise advisories
+      url: https://www.connectwise.com/company/trust/advisories
+    - text: ConnectWise status page incident
+      url: https://status.connectwise.com/pages/incident/619cf82551fec9053d612f09/6ad263692dc48705ab3da2cb
+  involved: [agents ran recon and password spraying at machine speed, stolen ConnectWise app credentials used by agents to sign in to 2250+ Microsoft 365 tenants, 2900 sign-in attempts per minute, agents added application credentials and privileged role assignments for persistence, targeting-to-privileged-access in under 3 hours, hundreds of organisations across defence/energy/finance/government]
+  impact: privileged cloud persistence established in many customer tenants via a trusted backup app; defenders left with minutes to respond
+
 - title: "Grok Bot posted its owner's bank balances into the company Slack, as him"
   org: XMTP Labs (CEO Shane Mac)
   agent: Grok Bot (xAI), two always-on agents sharing one cloud computer
